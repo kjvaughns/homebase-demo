@@ -5,8 +5,10 @@ import { ClosePanel } from '../components/ClosePanel';
 import { Caption, Green } from '../components/Caption';
 import { FeatherIcon } from '../components/FeatherIcon';
 import { CheckmarkSVG } from '../components/CheckmarkSVG';
+import { TapDot, usePressScale } from '../components/TapDot';
+import { PunchWord } from '../components/PunchWord';
 
-// Sequence-relative: 0-420 (7s)
+// Sequence-relative: 0-390 (6.5s), punch word + sequential simulated taps
 // Real app: SimpleBookingScreen — 14-day date strip, time chips,
 // "Repeat this service" toggle, "Deposit due now", "Request Appointment".
 
@@ -20,19 +22,21 @@ const DAYS = [
   { d: 'Tue', n: 14 },
 ];
 const SELECTED_DAY = 10;
-const CONFIRM_AT = 300;
+const TAP_TIME = 130;   // tap the 10:00 AM chip
+const TAP_TOGGLE = 180; // tap the repeat toggle
+const CONFIRM_AT = 290; // tap Request Appointment
 
 export const BookingScene: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const fadeOut = interpolate(frame, [396, 420], [1, 0], {
+  const fadeOut = interpolate(frame, [366, 390], [1, 0], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
 
   // Day pop
-  const dayF = frame - 70;
+  const dayF = frame - 92;
   const dayS = spring({ frame: dayF, fps, config: SPRING_SNAPPY });
   const dayScale = interpolate(dayS, [0, 0.6, 1], [0.6, 1.15, 1]);
   const dayOpacity = interpolate(dayF, [0, 12], [0, 1], {
@@ -40,22 +44,22 @@ export const BookingScene: React.FC = () => {
     extrapolateLeft: 'clamp',
   });
 
-  const timeOpacity = interpolate(frame, [110, 132], [0, 1], {
+  const timeOpacity = interpolate(frame, [108, 126], [0, 1], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
 
   // Repeat toggle flips on
-  const togF = frame - 160;
+  const togF = frame - TAP_TOGGLE - 8;
   const togS = spring({ frame: togF, fps, config: SPRING_SNAPPY });
   const knobX = interpolate(togS, [0, 1], [0, 22]);
   const togOn = togF > 8;
-  const freqOpacity = interpolate(frame, [185, 207], [0, 1], {
+  const freqOpacity = interpolate(frame, [TAP_TOGGLE + 24, TAP_TOGGLE + 44], [0, 1], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
 
-  const depositOpacity = interpolate(frame, [215, 237], [0, 1], {
+  const depositOpacity = interpolate(frame, [228, 248], [0, 1], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
@@ -76,6 +80,7 @@ export const BookingScene: React.FC = () => {
 
   return (
     <AbsoluteFill style={{ background: C.bg, opacity: fadeOut }}>
+      <PunchWord startFrame={0} duration={44} text="Get booked." color={C.white} />
       <AbsoluteFill
         style={{
           display: 'flex',
@@ -86,7 +91,7 @@ export const BookingScene: React.FC = () => {
       >
         <div style={{ position: 'relative' }}>
           <div style={{ opacity: panelDim }}>
-            <ClosePanel startFrame={16} width={700} tiltX={2} tiltY={2} float={!confirmed}>
+            <ClosePanel startFrame={48} width={700} tiltX={2} tiltY={2} float={!confirmed}>
               <div
                 style={{
                   background: C.card,
@@ -95,8 +100,12 @@ export const BookingScene: React.FC = () => {
                   display: 'flex',
                   flexDirection: 'column',
                   gap: 22,
+                  position: 'relative',
                 }}
               >
+                <TapDot startFrame={TAP_TIME} x={222} y={210} />
+                <TapDot startFrame={TAP_TOGGLE} x={617} y={288} />
+                <TapDot startFrame={CONFIRM_AT} x={350} y={465} />
                 {/* Select Date — horizontal strip (real pattern) */}
                 <div>
                   <div style={{ fontSize: 14, fontWeight: 600, color: C.muted, fontFamily: FONT, marginBottom: 12, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
@@ -140,7 +149,7 @@ export const BookingScene: React.FC = () => {
                   </div>
                   <div style={{ display: 'flex', gap: 12 }}>
                     {['9:00 AM', '10:00 AM', '1:00 PM', '3:00 PM'].map((t) => {
-                      const sel = t === '10:00 AM';
+                      const sel = t === '10:00 AM' && frame >= TAP_TIME + 10;
                       return (
                         <div
                           key={t}

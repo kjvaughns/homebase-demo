@@ -4,8 +4,9 @@ import { C, FONT, SPRING_GENTLE } from '../constants';
 import { ClosePanel } from '../components/ClosePanel';
 import { Caption, Green } from '../components/Caption';
 import { FeatherIcon } from '../components/FeatherIcon';
+import { TapDot, usePressScale } from '../components/TapDot';
 
-// Sequence-relative: 0-440 (~7.3s). Close-up panels, no phone.
+// Sequence-relative: 0-330 (5.5s). Close-up panels + simulated tap.
 // Real app: ProviderHomeScreen — greeting, 2x2 stat grid, Quick Quote card.
 
 const STATS = [
@@ -69,7 +70,7 @@ export const DashboardScene: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const fadeOut = interpolate(frame, [416, 440], [1, 0], {
+  const fadeOut = interpolate(frame, [306, 330], [1, 0], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
@@ -83,12 +84,16 @@ export const DashboardScene: React.FC = () => {
   const greetY = interpolate(greetS, [0, 1], [20, 0]);
 
   // Quick Quote card
-  const qqS = spring({ frame: frame - 190, fps, config: SPRING_GENTLE });
-  const qqOpacity = interpolate(frame, [190, 212], [0, 1], {
+  const qqS = spring({ frame: frame - 140, fps, config: SPRING_GENTLE });
+  const qqOpacity = interpolate(frame, [140, 158], [0, 1], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
   const qqY = interpolate(qqS, [0, 1], [26, 0]);
+
+  // Simulated tap on Quick Quote at 230
+  const TAP_AT = 230;
+  const qqPress = usePressScale(frame, TAP_AT);
 
   return (
     <AbsoluteFill style={{ background: C.bg, opacity: fadeOut }}>
@@ -101,8 +106,9 @@ export const DashboardScene: React.FC = () => {
           paddingBottom: 130,
         }}
       >
-        <ClosePanel startFrame={40} width={720} tiltX={2.5} tiltY={-2}>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+        <ClosePanel startFrame={28} width={720} tiltX={2.5} tiltY={-2}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 16, position: 'relative' }}>
+            <TapDot startFrame={TAP_AT} x={360} y={560} />
             {/* Greeting card */}
             <div
               style={{
@@ -145,7 +151,7 @@ export const DashboardScene: React.FC = () => {
             {/* 2x2 stat grid — real labels */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
               {STATS.map((st, i) => (
-                <StatCell key={st.label} {...st} delay={70 + i * 14} />
+                <StatCell key={st.label} {...st} delay={54 + i * 10} />
               ))}
             </div>
 
@@ -153,7 +159,7 @@ export const DashboardScene: React.FC = () => {
             <div
               style={{
                 opacity: qqOpacity,
-                transform: `translateY(${qqY}px)`,
+                transform: `translateY(${qqY}px) scale(${qqPress})`,
                 background: C.greenLight,
                 border: `1px solid rgba(56,174,95,0.3)`,
                 borderRadius: 24,
@@ -189,7 +195,7 @@ export const DashboardScene: React.FC = () => {
       </AbsoluteFill>
 
       <Caption
-        startFrame={100}
+        startFrame={80}
         eyebrow="Your Command Center"
         headline={
           <>

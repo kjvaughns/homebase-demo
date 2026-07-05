@@ -4,42 +4,42 @@ import { C, FONT, SPRING_HEAVY } from '../constants';
 import { Logo } from '../components/Logo';
 import { PulseRing } from '../components/PulseRing';
 
-// Sequence-relative: 0-260 (~4.3s)
+// Sequence-relative: 0-160 (~2.7s)
 export const LogoReveal: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const logoS = spring({ frame: frame - 20, fps, config: SPRING_HEAVY });
+  const logoS = spring({ frame: frame - 8, fps, config: SPRING_HEAVY });
   const logoScale = interpolate(logoS, [0, 1], [0.7, 1]);
-  const logoOpacity = interpolate(frame, [20, 40], [0, 1], {
+  const logoOpacity = interpolate(frame, [8, 22], [0, 1], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
-  const draw = interpolate(frame, [24, 80], [0, 1], {
+  const draw = interpolate(frame, [10, 50], [0, 1], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
 
-  const nameOpacity = interpolate(frame, [90, 115], [0, 1], {
+  const nameOpacity = interpolate(frame, [56, 74], [0, 1], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
-  const nameS = spring({ frame: frame - 90, fps, config: SPRING_HEAVY });
+  const nameS = spring({ frame: frame - 56, fps, config: SPRING_HEAVY });
   const nameY = interpolate(nameS, [0, 1], [16, 0]);
 
-  const tagOpacity = interpolate(frame, [130, 155], [0, 1], {
+  const tagOpacity = interpolate(frame, [84, 102], [0, 1], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
 
-  const fadeOut = interpolate(frame, [236, 260], [1, 0], {
+  const fadeOut = interpolate(frame, [140, 160], [1, 0], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
 
   return (
     <AbsoluteFill style={{ background: C.bg, opacity: fadeOut }}>
-      <PulseRing startFrame={36} size={340} />
+      <PulseRing startFrame={16} size={340} />
 
       <AbsoluteFill
         style={{

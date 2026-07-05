@@ -5,7 +5,7 @@ import { IPhoneFrame } from '../components/iPhoneFrame';
 import { Logo } from '../components/Logo';
 import { FeatherIcon } from '../components/FeatherIcon';
 
-// Sequence-relative: 0-180 (3s)
+// Sequence-relative: 0-170 (~2.8s)
 
 const MINI_STATS = [
   { label: 'Clients', value: '24', icon: 'users' },
@@ -101,7 +101,7 @@ export const EndCard: React.FC = () => {
     extrapolateLeft: 'clamp',
   });
 
-  const finalFade = interpolate(frame, [162, 180], [1, 0], {
+  const finalFade = interpolate(frame, [152, 170], [1, 0], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });

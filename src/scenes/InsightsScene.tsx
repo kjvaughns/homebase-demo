@@ -4,7 +4,7 @@ import { C, FONT, SPRING_GENTLE, SPRING_SNAPPY } from '../constants';
 import { ClosePanel } from '../components/ClosePanel';
 import { Caption, Green } from '../components/Caption';
 
-// Sequence-relative: 0-380 (~6.3s)
+// Sequence-relative: 0-270 (4.5s)
 // Real app: Business Insights — "Revenue, last 8 weeks" bar chart + stat tiles w/ deltas.
 
 const BARS = [42, 58, 50, 72, 66, 88, 79, 100]; // % heights
@@ -19,7 +19,7 @@ export const InsightsScene: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const fadeOut = interpolate(frame, [356, 380], [1, 0], {
+  const fadeOut = interpolate(frame, [246, 270], [1, 0], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
@@ -34,7 +34,7 @@ export const InsightsScene: React.FC = () => {
           paddingBottom: 130,
         }}
       >
-        <ClosePanel startFrame={20} width={760} tiltX={2} tiltY={2}>
+        <ClosePanel startFrame={12} width={760} tiltX={2} tiltY={2}>
           <div
             style={{
               background: C.card,
@@ -57,7 +57,7 @@ export const InsightsScene: React.FC = () => {
             {/* Bar chart — bars grow with stagger */}
             <div style={{ display: 'flex', alignItems: 'flex-end', gap: 18, height: 190, padding: '0 6px' }}>
               {BARS.map((h, i) => {
-                const f = frame - 60 - i * 8;
+                const f = frame - 44 - i * 6;
                 const s = spring({ frame: f, fps, config: SPRING_SNAPPY });
                 const grow = interpolate(s, [0, 1], [0, 1]);
                 const isPeak = i === BARS.length - 1;
@@ -107,7 +107,7 @@ export const InsightsScene: React.FC = () => {
             {/* Stat tiles w/ deltas */}
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr', gap: 14 }}>
               {TILES.map((t, i) => {
-                const f = frame - 140 - i * 12;
+                const f = frame - 110 - i * 9;
                 const s = spring({ frame: f, fps, config: SPRING_GENTLE });
                 const opacity = interpolate(f, [0, 18], [0, 1], {
                   extrapolateRight: 'clamp',
@@ -140,7 +140,7 @@ export const InsightsScene: React.FC = () => {
       </AbsoluteFill>
 
       <Caption
-        startFrame={90}
+        startFrame={70}
         eyebrow="Know Your Numbers"
         headline={
           <>

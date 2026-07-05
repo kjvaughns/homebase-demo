@@ -31,15 +31,15 @@ export const SPRING_HEAVY = { mass: 1.2, damping: 14, stiffness: 120 };
 export const SPRING_SNAPPY = { mass: 0.5, damping: 18, stiffness: 200 };
 export const SPRING_GENTLE = { mass: 0.8, damping: 22, stiffness: 80 };
 
-// 45s @ 60fps = 2700 frames
+// 36s @ 60fps = 2160 frames
 export const F = {
   COLD_OPEN: 0,
-  LOGO: 300,
-  DASHBOARD: 560,
-  INSIGHTS: 1000,
-  MARKETPLACE: 1380,
-  BOOKING: 1800,
-  PAYOUT: 2220,
-  END: 2520,
-  TOTAL: 2700,
+  LOGO: 240,
+  DASHBOARD: 400,
+  INSIGHTS: 730,
+  MARKETPLACE: 1000,
+  BOOKING: 1360,
+  PAYOUT: 1750,
+  END: 1990,
+  TOTAL: 2160,
 };

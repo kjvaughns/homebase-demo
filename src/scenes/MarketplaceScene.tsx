@@ -5,8 +5,10 @@ import { ClosePanel } from '../components/ClosePanel';
 import { Caption, Green } from '../components/Caption';
 import { FeatherIcon } from '../components/FeatherIcon';
 import { TypingText } from '../components/TypingText';
+import { TapDot, usePressScale } from '../components/TapDot';
+import { PunchWord } from '../components/PunchWord';
 
-// Sequence-relative: 0-420 (7s)
+// Sequence-relative: 0-360 (6s), opens with punch word + ends with Book Now tap
 // Real app: FindScreen search "Search services..." + ProviderCard
 // (avatar, name, blue verified check, rating (count), distance, $/hr green, tag pills)
 
@@ -14,26 +16,31 @@ export const MarketplaceScene: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const fadeOut = interpolate(frame, [396, 420], [1, 0], {
+  const fadeOut = interpolate(frame, [336, 360], [1, 0], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
 
-  const searchS = spring({ frame: frame - 16, fps, config: SPRING_GENTLE });
-  const searchOpacity = interpolate(frame, [16, 36], [0, 1], {
+  const searchS = spring({ frame: frame - 48, fps, config: SPRING_GENTLE });
+  const searchOpacity = interpolate(frame, [48, 66], [0, 1], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
   const searchY = interpolate(searchS, [0, 1], [24, 0]);
 
-  const bookS = spring({ frame: frame - 260, fps, config: SPRING_GENTLE });
-  const bookOpacity = interpolate(frame, [260, 282], [0, 1], {
+  const bookS = spring({ frame: frame - 190, fps, config: SPRING_GENTLE });
+  const bookOpacity = interpolate(frame, [190, 208], [0, 1], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
 
+  // Simulated tap on Book Now
+  const TAP_AT = 270;
+  const bookPress = usePressScale(frame, TAP_AT);
+
   return (
     <AbsoluteFill style={{ background: C.bg, opacity: fadeOut }}>
+      <PunchWord startFrame={0} duration={44} text="Get found." color={C.green} />
       <AbsoluteFill
         style={{
           display: 'flex',
@@ -62,14 +69,14 @@ export const MarketplaceScene: React.FC = () => {
           <FeatherIcon name="search" size={22} color={C.muted} />
           <TypingText
             text="Lawn care near Dallas"
-            startFrame={50}
-            charsPerSecond={9}
+            startFrame={70}
+            charsPerSecond={14}
             style={{ fontSize: 19, color: C.white, fontFamily: FONT }}
           />
         </div>
 
         {/* Oversized provider card — real ProviderCard layout */}
-        <ClosePanel startFrame={130} width={640} tiltX={2.5} tiltY={-2}>
+        <ClosePanel startFrame={120} width={640} tiltX={2.5} tiltY={-2}>
           <div
             style={{
               background: C.card,
@@ -78,8 +85,10 @@ export const MarketplaceScene: React.FC = () => {
               display: 'flex',
               flexDirection: 'column',
               gap: 18,
+              position: 'relative',
             }}
           >
+            <TapDot startFrame={TAP_AT} x={320} y={236} />
             <div style={{ display: 'flex', alignItems: 'center', gap: 18 }}>
               <div
                 style={{
@@ -147,7 +156,7 @@ export const MarketplaceScene: React.FC = () => {
             <div
               style={{
                 opacity: bookOpacity,
-                transform: `scale(${interpolate(bookS, [0, 1], [0.96, 1])})`,
+                transform: `scale(${interpolate(bookS, [0, 1], [0.96, 1]) * bookPress})`,
                 background: C.green,
                 borderRadius: 14,
                 height: 56,
@@ -167,7 +176,7 @@ export const MarketplaceScene: React.FC = () => {
       </AbsoluteFill>
 
       <Caption
-        startFrame={170}
+        startFrame={150}
         eyebrow="Homeowners Find You"
         headline={
           <>

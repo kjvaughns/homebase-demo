@@ -4,10 +4,10 @@ import { C, FONT, SPRING_HEAVY } from '../constants';
 import { ClosePanel } from '../components/ClosePanel';
 import { Caption } from '../components/Caption';
 
-// Sequence-relative: 0-300 (5s)
+// Sequence-relative: 0-240 (4s)
 // Real app: FinancialsScreen "Next Payout" card + Transactions rows w/ status pills.
 
-const PANEL_AT = 90;
+const PANEL_AT = 70;
 
 const ROWS = [
   { label: 'Invoice #1047 · Sarah K.', amount: '$280.00', pill: 'Paid', pillColor: '#38AE5F' },
@@ -19,7 +19,7 @@ export const PayoutScene: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const fadeOut = interpolate(frame, [276, 300], [1, 0], {
+  const fadeOut = interpolate(frame, [216, 240], [1, 0], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
@@ -121,7 +121,7 @@ export const PayoutScene: React.FC = () => {
                   Transactions
                 </div>
                 {ROWS.map((r, i) => {
-                  const f = frame - PANEL_AT - 30 - i * 12;
+                  const f = frame - PANEL_AT - 24 - i * 10;
                   const opacity = interpolate(f, [0, 16], [0, 1], {
                     extrapolateRight: 'clamp',
                     extrapolateLeft: 'clamp',
@@ -168,7 +168,7 @@ export const PayoutScene: React.FC = () => {
 
       {frame >= PANEL_AT && (
         <Caption
-          startFrame={PANEL_AT + 40}
+          startFrame={PANEL_AT + 30}
           eyebrow="Powered by Stripe"
           headline={<>Invoices in. Payouts out. Automatic.</>}
           sub="Track every dollar from job to bank"
