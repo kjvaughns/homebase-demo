@@ -14,7 +14,7 @@ const useEntrance = (startFrame: number, delay: number, dist: number) => {
   const { fps } = useVideoConfig();
   const f = frame - startFrame - delay;
   const s = spring({ frame: f, fps, config: SPRING_GENTLE });
-  const opacity = interpolate(f, [0, 16], [0, 1], {
+  const opacity = interpolate(f, [0, 20], [0, 1], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
@@ -24,14 +24,14 @@ const useEntrance = (startFrame: number, delay: number, dist: number) => {
 
 export const Caption: React.FC<CaptionProps> = ({ startFrame, eyebrow, headline, sub }) => {
   const eyebrowAnim = useEntrance(startFrame, 0, 10);
-  const headAnim = useEntrance(startFrame, 8, 16);
-  const subAnim = useEntrance(startFrame, 18, 0);
+  const headAnim = useEntrance(startFrame, 10, 16);
+  const subAnim = useEntrance(startFrame, 22, 0);
 
   return (
     <div
       style={{
         position: 'absolute',
-        bottom: 52,
+        bottom: 64,
         left: 0,
         right: 0,
         display: 'flex',
@@ -44,13 +44,13 @@ export const Caption: React.FC<CaptionProps> = ({ startFrame, eyebrow, headline,
         style={{
           opacity: eyebrowAnim.opacity,
           transform: `translateY(${eyebrowAnim.translateY}px)`,
-          fontSize: 9,
+          fontSize: 11,
           letterSpacing: '0.22em',
           color: C.green,
           textTransform: 'uppercase',
           fontFamily: FONT,
           fontWeight: 600,
-          marginBottom: 10,
+          marginBottom: 12,
         }}
       >
         {eyebrow}
@@ -60,11 +60,11 @@ export const Caption: React.FC<CaptionProps> = ({ startFrame, eyebrow, headline,
           style={{
             opacity: headAnim.opacity,
             transform: `translateY(${headAnim.translateY}px)`,
-            fontSize: 28,
+            fontSize: 30,
             fontWeight: 800,
             color: C.white,
-            lineHeight: 1.15,
-            maxWidth: 700,
+            lineHeight: 1.2,
+            maxWidth: 760,
             textAlign: 'center',
             fontFamily: FONT,
           }}
@@ -76,9 +76,9 @@ export const Caption: React.FC<CaptionProps> = ({ startFrame, eyebrow, headline,
         <div
           style={{
             opacity: subAnim.opacity,
-            fontSize: 12,
+            fontSize: 13,
             color: C.muted,
-            marginTop: 8,
+            marginTop: 10,
             fontFamily: FONT,
           }}
         >

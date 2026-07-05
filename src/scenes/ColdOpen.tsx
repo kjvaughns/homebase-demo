@@ -2,64 +2,53 @@ import React from 'react';
 import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig, interpolate } from 'remotion';
 import { C, FONT, SPRING_HEAVY } from '../constants';
 
-// Sequence-relative frames: 0-180
+// Sequence-relative: 0-300 (5s). Slower beats than v2.
 export const ColdOpen: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const line1Opacity = interpolate(frame, [40, 60], [0, 1], {
+  const line1Opacity = interpolate(frame, [60, 90], [0, 1], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
 
-  const numS = spring({ frame: frame - 80, fps, config: SPRING_HEAVY });
+  const numS = spring({ frame: frame - 120, fps, config: SPRING_HEAVY });
   const numScale = interpolate(numS, [0, 1], [0.8, 1]);
-  const numOpacity = interpolate(frame, [80, 96], [0, 1], {
+  const numOpacity = interpolate(frame, [120, 140], [0, 1], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
 
-  const subOpacity = interpolate(frame, [110, 128], [0, 1], {
+  const subOpacity = interpolate(frame, [170, 195], [0, 1], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
 
-  // Block 1 fades out at 150
-  const blockFade = interpolate(frame, [148, 162], [1, 0], {
-    extrapolateRight: 'clamp',
-    extrapolateLeft: 'clamp',
-  });
-
-  // "Until now." slams at 160
-  const untilF = frame - 160;
-  const untilS = spring({ frame: untilF, fps, config: SPRING_HEAVY });
-  const untilScale = interpolate(untilS, [0, 0.7, 1], [0.7, 1.05, 1]);
-  const untilOpacity = interpolate(untilF, [0, 8], [0, 1], {
+  const fadeOut = interpolate(frame, [276, 300], [1, 0], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
 
   return (
     <AbsoluteFill style={{ background: C.bg }}>
-      {/* Block 1: the stat */}
       <AbsoluteFill
         style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          opacity: blockFade,
+          opacity: fadeOut,
         }}
       >
         <div
           style={{
             opacity: line1Opacity,
-            fontSize: 14,
+            fontSize: 16,
             color: C.muted,
             fontWeight: 400,
             letterSpacing: '0.05em',
             fontFamily: FONT,
-            marginBottom: 30,
+            marginBottom: 34,
           }}
         >
           The average home service provider earns $97K/year.
@@ -69,13 +58,13 @@ export const ColdOpen: React.FC = () => {
           style={{
             opacity: numOpacity,
             transform: `scale(${numScale})`,
-            fontSize: 96,
+            fontSize: 100,
             fontWeight: 900,
             color: C.white,
             fontFamily: FONT,
             lineHeight: 1,
             letterSpacing: '-0.02em',
-            marginBottom: 30,
+            marginBottom: 34,
           }}
         >
           $31,000
@@ -84,9 +73,9 @@ export const ColdOpen: React.FC = () => {
         <div
           style={{
             opacity: subOpacity,
-            fontSize: 14,
+            fontSize: 16,
             color: C.muted,
-            lineHeight: 1.6,
+            lineHeight: 1.7,
             textAlign: 'center',
             fontFamily: FONT,
           }}
@@ -96,31 +85,6 @@ export const ColdOpen: React.FC = () => {
           and clients they never followed up with.
         </div>
       </AbsoluteFill>
-
-      {/* Block 2: "Until now." */}
-      {frame >= 160 && (
-        <AbsoluteFill
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <div
-            style={{
-              opacity: untilOpacity,
-              transform: `scale(${untilScale})`,
-              fontSize: 80,
-              fontWeight: 900,
-              color: C.green,
-              fontFamily: FONT,
-              letterSpacing: '-0.02em',
-            }}
-          >
-            Until now.
-          </div>
-        </AbsoluteFill>
-      )}
     </AbsoluteFill>
   );
 };
