@@ -1,6 +1,6 @@
 import React from 'react';
 import { spring, useCurrentFrame, useVideoConfig, interpolate } from 'remotion';
-import { COLORS, SPRING } from '../constants';
+import { C, FONT, SPRING_SNAPPY } from '../constants';
 
 interface ToastProps {
   startFrame: number;
@@ -14,45 +14,45 @@ export const Toast: React.FC<ToastProps> = ({ startFrame, icon, title, body }) =
   const { fps } = useVideoConfig();
   const f = frame - startFrame;
 
-  if (f < 0 || f > 70) return null;
+  if (f < 0 || f > 100) return null;
 
-  const s = spring({ frame: f, fps, config: SPRING });
-  const hideS = spring({ frame: f - 50, fps, config: SPRING });
-
-  const translateY = f < 50
-    ? interpolate(s, [0, 1], [-30, 0])
-    : interpolate(hideS, [0, 1], [0, -30]);
-
-  const opacity = f < 50
-    ? interpolate(f, [0, 18], [0, 1], { extrapolateRight: 'clamp', extrapolateLeft: 'clamp' })
-    : interpolate(f, [50, 70], [1, 0], { extrapolateRight: 'clamp', extrapolateLeft: 'clamp' });
+  const s = spring({ frame: f, fps, config: SPRING_SNAPPY });
+  const translateY = interpolate(s, [0, 1], [-40, 0]);
+  const entryOpacity = interpolate(f, [0, 14], [0, 1], {
+    extrapolateRight: 'clamp',
+    extrapolateLeft: 'clamp',
+  });
+  const exitOpacity = interpolate(f, [80, 98], [1, 0], {
+    extrapolateRight: 'clamp',
+    extrapolateLeft: 'clamp',
+  });
 
   return (
     <div
       style={{
         position: 'absolute',
-        top: 30,
-        left: 14,
-        right: 14,
-        background: COLORS.card,
-        border: `1px solid ${COLORS.border}`,
-        borderRadius: 12,
+        top: 28,
+        left: 12,
+        right: 12,
+        zIndex: 100,
+        background: 'rgba(17,17,17,0.97)',
+        border: '0.5px solid #2a2a2a',
+        borderRadius: 14,
+        backdropFilter: 'blur(20px)',
         display: 'flex',
         alignItems: 'center',
         gap: 10,
         padding: '10px 12px',
         transform: `translateY(${translateY}px)`,
-        opacity,
-        zIndex: 100,
+        opacity: Math.min(entryOpacity, exitOpacity),
       }}
     >
       <div
         style={{
-          width: 26,
-          height: 26,
-          background: COLORS.greenDim,
-          border: `1px solid ${COLORS.greenBorder}`,
-          borderRadius: 6,
+          width: 30,
+          height: 30,
+          borderRadius: 8,
+          background: C.greenDim,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -63,12 +63,8 @@ export const Toast: React.FC<ToastProps> = ({ startFrame, icon, title, body }) =
         {icon}
       </div>
       <div>
-        <div style={{ fontSize: 10, color: COLORS.white, fontWeight: 700, fontFamily: 'sans-serif' }}>
-          {title}
-        </div>
-        <div style={{ fontSize: 9, color: '#aaa', fontFamily: 'sans-serif', marginTop: 2 }}>
-          {body}
-        </div>
+        <div style={{ fontSize: 10, fontWeight: 700, color: C.white, fontFamily: FONT }}>{title}</div>
+        <div style={{ fontSize: 9, color: '#888', fontFamily: FONT, marginTop: 1 }}>{body}</div>
       </div>
     </div>
   );

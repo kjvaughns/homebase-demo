@@ -1,53 +1,50 @@
 import React from 'react';
-import { AbsoluteFill, useCurrentFrame } from 'remotion';
-import { interpolate } from 'remotion';
-import { FRAMES } from './constants';
-import { ColdOpen } from './screens/ColdOpen';
-import { Dashboard } from './screens/Dashboard';
-import { Marketplace } from './screens/Marketplace';
-import { BookingFlow } from './screens/BookingFlow';
-import { Chat } from './screens/Chat';
-import { Invoice } from './screens/Invoice';
-import { Payout } from './screens/Payout';
-import { EndCard } from './screens/EndCard';
-
-const SceneLayer: React.FC<{
-  startFrame: number;
-  endFrame: number;
-  children: React.ReactNode;
-}> = ({ startFrame, endFrame, children }) => {
-  const frame = useCurrentFrame();
-  if (frame < startFrame || frame >= endFrame) return null;
-  return <AbsoluteFill>{children}</AbsoluteFill>;
-};
+import { AbsoluteFill, Sequence } from 'remotion';
+import { C, F } from './constants';
+import { ColdOpen } from './scenes/ColdOpen';
+import { Chaos } from './scenes/Chaos';
+import { AppReveal } from './scenes/AppReveal';
+import { Dashboard } from './scenes/Dashboard';
+import { Marketplace } from './scenes/Marketplace';
+import { BookingFlow } from './scenes/BookingFlow';
+import { Chat } from './scenes/Chat';
+import { Payment } from './scenes/Payment';
+import { Payout } from './scenes/Payout';
+import { EndCard } from './scenes/EndCard';
 
 export const HomeBaseDemo: React.FC = () => {
   return (
-    <AbsoluteFill style={{ background: '#000000' }}>
-      <SceneLayer startFrame={FRAMES.s1} endFrame={FRAMES.s2 + 1}>
+    <AbsoluteFill style={{ background: C.bg }}>
+      <Sequence from={F.COLD_OPEN} durationInFrames={F.CHAOS - F.COLD_OPEN}>
         <ColdOpen />
-      </SceneLayer>
-      <SceneLayer startFrame={FRAMES.s2} endFrame={FRAMES.s3 + 1}>
+      </Sequence>
+      <Sequence from={F.CHAOS} durationInFrames={F.REVEAL - F.CHAOS}>
+        <Chaos />
+      </Sequence>
+      <Sequence from={F.REVEAL} durationInFrames={F.DASHBOARD - F.REVEAL}>
+        <AppReveal />
+      </Sequence>
+      <Sequence from={F.DASHBOARD} durationInFrames={F.MARKETPLACE - F.DASHBOARD}>
         <Dashboard />
-      </SceneLayer>
-      <SceneLayer startFrame={FRAMES.s3} endFrame={FRAMES.s4 + 1}>
+      </Sequence>
+      <Sequence from={F.MARKETPLACE} durationInFrames={F.BOOKING - F.MARKETPLACE}>
         <Marketplace />
-      </SceneLayer>
-      <SceneLayer startFrame={FRAMES.s4} endFrame={FRAMES.s5 + 1}>
+      </Sequence>
+      <Sequence from={F.BOOKING} durationInFrames={F.CHAT - F.BOOKING}>
         <BookingFlow />
-      </SceneLayer>
-      <SceneLayer startFrame={FRAMES.s5} endFrame={FRAMES.s6 + 1}>
+      </Sequence>
+      <Sequence from={F.CHAT} durationInFrames={F.MONEY - F.CHAT}>
         <Chat />
-      </SceneLayer>
-      <SceneLayer startFrame={FRAMES.s6} endFrame={FRAMES.s7 + 1}>
-        <Invoice />
-      </SceneLayer>
-      <SceneLayer startFrame={FRAMES.s7} endFrame={FRAMES.s8 + 1}>
+      </Sequence>
+      <Sequence from={F.MONEY} durationInFrames={70}>
+        <Payment />
+      </Sequence>
+      <Sequence from={F.MONEY + 70} durationInFrames={F.END - F.MONEY - 70}>
         <Payout />
-      </SceneLayer>
-      <SceneLayer startFrame={FRAMES.s8} endFrame={1801}>
+      </Sequence>
+      <Sequence from={F.END} durationInFrames={F.TOTAL - F.END}>
         <EndCard />
-      </SceneLayer>
+      </Sequence>
     </AbsoluteFill>
   );
 };
