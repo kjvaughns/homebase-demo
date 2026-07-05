@@ -2,7 +2,7 @@ import React from 'react';
 import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig, interpolate } from 'remotion';
 import { C, FONT, SPRING_HEAVY } from '../constants';
 
-// Sequence-relative: 0-240 (4s). Dramatic beats + "Until now." slam.
+// Sequence-relative: 0-260. BIG type, full-screen.
 export const ColdOpen: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -24,26 +24,26 @@ export const ColdOpen: React.FC = () => {
     extrapolateLeft: 'clamp',
   });
 
-  const blockFade = interpolate(frame, [172, 188], [1, 0], {
+  const blockFade = interpolate(frame, [186, 202], [1, 0], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
 
   // "Until now." slams at 190
-  const untilF = frame - 190;
+  const untilF = frame - 206;
   const untilS = spring({ frame: untilF, fps, config: SPRING_HEAVY });
   const untilScale = interpolate(untilS, [0, 0.7, 1], [0.7, 1.05, 1]);
   const untilOpacity = interpolate(untilF, [0, 6], [0, 1], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
-  const untilOut = interpolate(frame, [228, 240], [1, 0], {
+  const untilOut = interpolate(frame, [248, 260], [1, 0], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
 
   return (
-    <AbsoluteFill style={{ background: C.bg }}>
+    <AbsoluteFill>
       <AbsoluteFill
         style={{
           display: 'flex',
@@ -56,7 +56,7 @@ export const ColdOpen: React.FC = () => {
         <div
           style={{
             opacity: line1Opacity,
-            fontSize: 16,
+            fontSize: 26,
             color: C.muted,
             fontWeight: 400,
             letterSpacing: '0.05em',
@@ -71,7 +71,7 @@ export const ColdOpen: React.FC = () => {
           style={{
             opacity: numOpacity,
             transform: `scale(${numScale})`,
-            fontSize: 104,
+            fontSize: 170,
             fontWeight: 900,
             color: C.white,
             fontFamily: FONT,
@@ -86,7 +86,7 @@ export const ColdOpen: React.FC = () => {
         <div
           style={{
             opacity: subOpacity,
-            fontSize: 16,
+            fontSize: 26,
             color: C.muted,
             lineHeight: 1.7,
             textAlign: 'center',
@@ -99,7 +99,7 @@ export const ColdOpen: React.FC = () => {
         </div>
       </AbsoluteFill>
 
-      {frame >= 190 && (
+      {frame >= 206 && (
         <AbsoluteFill
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: untilOut }}
         >
@@ -107,7 +107,7 @@ export const ColdOpen: React.FC = () => {
             style={{
               opacity: untilOpacity,
               transform: `scale(${untilScale})`,
-              fontSize: 86,
+              fontSize: 130,
               fontWeight: 900,
               color: C.green,
               fontFamily: FONT,

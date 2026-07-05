@@ -4,10 +4,11 @@ import { C, FONT, SPRING_HEAVY } from '../constants';
 import { ClosePanel } from '../components/ClosePanel';
 import { Caption } from '../components/Caption';
 
-// Sequence-relative: 0-240 (4s)
+// Sequence-relative: 0-380 (~6.3s): slam -> stat count-up -> Next Payout panel
 // Real app: FinancialsScreen "Next Payout" card + Transactions rows w/ status pills.
 
-const PANEL_AT = 70;
+const STATS_AT = 60;
+const PANEL_AT = 200;
 
 const ROWS = [
   { label: 'Invoice #1047 · Sarah K.', amount: '$280.00', pill: 'Paid', pillColor: '#38AE5F' },
@@ -19,7 +20,7 @@ export const PayoutScene: React.FC = () => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  const fadeOut = interpolate(frame, [216, 240], [1, 0], {
+  const fadeOut = interpolate(frame, [356, 380], [1, 0], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
@@ -31,15 +32,48 @@ export const PayoutScene: React.FC = () => {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
-  const bigFade = interpolate(frame, [PANEL_AT - 16, PANEL_AT], [1, 0], {
+  const bigFade = interpolate(frame, [STATS_AT - 14, STATS_AT], [1, 0], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
 
   return (
-    <AbsoluteFill style={{ background: C.bg, opacity: fadeOut }}>
+    <AbsoluteFill style={{ opacity: fadeOut }}>
+      {/* Real site stats — count up (CaseStudiesSection.tsx) */}
+      {frame >= STATS_AT && frame < PANEL_AT && (
+        <AbsoluteFill
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 130,
+            opacity: interpolate(frame, [PANEL_AT - 16, PANEL_AT], [1, 0], { extrapolateRight: 'clamp', extrapolateLeft: 'clamp' }),
+          }}
+        >
+          {[
+            { end: 3, fmt: (v: number) => `${Math.round(v)} min`, label: 'Average booking time' },
+            { end: 68, fmt: (v: number) => `${Math.round(v)}%`, label: 'Recurring client rate' },
+            { end: 2400, fmt: (v: number) => `$${Math.round(v).toLocaleString('en-US')}`, label: 'Avg monthly deposits' },
+          ].map((st, i) => {
+            const f = frame - STATS_AT - i * 10;
+            const p = interpolate(f, [0, 50], [0, 1], { extrapolateRight: 'clamp', extrapolateLeft: 'clamp' });
+            const eased = 1 - Math.pow(1 - p, 3);
+            const op = interpolate(f, [0, 14], [0, 1], { extrapolateRight: 'clamp', extrapolateLeft: 'clamp' });
+            return (
+              <div key={st.label} style={{ opacity: op, textAlign: 'center' }}>
+                <div style={{ fontSize: 100, fontWeight: 900, color: C.green, fontFamily: FONT, letterSpacing: '-0.02em' }}>
+                  {st.fmt(st.end * eased)}
+                </div>
+                <div style={{ fontSize: 24, color: C.muted, fontFamily: FONT, marginTop: 10 }}>{st.label}</div>
+              </div>
+            );
+          })}
+        </AbsoluteFill>
+      )}
+
       {/* Interstitial */}
-      {frame < PANEL_AT && (
+      {frame < STATS_AT && (
         <AbsoluteFill
           style={{
             display: 'flex',
@@ -73,6 +107,7 @@ export const PayoutScene: React.FC = () => {
         }}
       >
         {frame >= PANEL_AT && (
+          <div style={{ transform: 'scale(1.3)' }}>
           <ClosePanel startFrame={PANEL_AT} width={680} tiltX={2.5} tiltY={-2}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               {/* Next Payout card — real copy pattern */}
@@ -163,6 +198,7 @@ export const PayoutScene: React.FC = () => {
               </div>
             </div>
           </ClosePanel>
+          </div>
         )}
       </AbsoluteFill>
 

@@ -96,16 +96,17 @@ export const DashboardScene: React.FC = () => {
   const qqPress = usePressScale(frame, TAP_AT);
 
   return (
-    <AbsoluteFill style={{ background: C.bg, opacity: fadeOut }}>
+    <AbsoluteFill style={{ opacity: fadeOut }}>
       <AbsoluteFill
         style={{
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           justifyContent: 'center',
-          paddingBottom: 130,
+          paddingBottom: 150,
         }}
       >
+        <div style={{ transform: 'scale(1.32)' }}>
         <ClosePanel startFrame={28} width={720} tiltX={2.5} tiltY={-2}>
           <div style={{ display: 'flex', flexDirection: 'column', gap: 16, position: 'relative' }}>
             <TapDot startFrame={TAP_AT} x={360} y={560} />
@@ -192,6 +193,7 @@ export const DashboardScene: React.FC = () => {
             </div>
           </div>
         </ClosePanel>
+        </div>
       </AbsoluteFill>
 
       <Caption

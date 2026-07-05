@@ -32,14 +32,14 @@ export const LogoReveal: React.FC = () => {
     extrapolateLeft: 'clamp',
   });
 
-  const fadeOut = interpolate(frame, [140, 160], [1, 0], {
+  const fadeOut = interpolate(frame, [160, 180], [1, 0], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
 
   return (
-    <AbsoluteFill style={{ background: C.bg, opacity: fadeOut }}>
-      <PulseRing startFrame={16} size={340} />
+    <AbsoluteFill style={{ opacity: fadeOut }}>
+      <PulseRing startFrame={16} size={460} />
 
       <AbsoluteFill
         style={{
@@ -51,14 +51,14 @@ export const LogoReveal: React.FC = () => {
         }}
       >
         <div style={{ opacity: logoOpacity, transform: `scale(${logoScale})` }}>
-          <Logo size={170} draw={draw} />
+          <Logo size={230} draw={draw} />
         </div>
 
         <div
           style={{
             opacity: nameOpacity,
             transform: `translateY(${nameY}px)`,
-            fontSize: 42,
+            fontSize: 64,
             fontWeight: 700,
             color: C.white,
             fontFamily: FONT,
@@ -71,14 +71,14 @@ export const LogoReveal: React.FC = () => {
         <div
           style={{
             opacity: tagOpacity,
-            fontSize: 16,
-            fontWeight: 300,
+            fontSize: 26,
+            fontWeight: 400,
             color: C.muted,
             letterSpacing: '0.06em',
             fontFamily: FONT,
           }}
         >
-          Run your business. Get clients. Get paid.
+          Get booked. Stay organized. Get paid.
         </div>
       </AbsoluteFill>
     </AbsoluteFill>

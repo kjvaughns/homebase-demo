@@ -79,17 +79,17 @@ export const BookingScene: React.FC = () => {
   });
 
   return (
-    <AbsoluteFill style={{ background: C.bg, opacity: fadeOut }}>
+    <AbsoluteFill style={{ opacity: fadeOut }}>
       <PunchWord startFrame={0} duration={44} text="Get booked." color={C.white} />
       <AbsoluteFill
         style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          paddingBottom: 130,
+          paddingBottom: 150,
         }}
       >
-        <div style={{ position: 'relative' }}>
+        <div style={{ position: 'relative', transform: 'scale(1.32)' }}>
           <div style={{ opacity: panelDim }}>
             <ClosePanel startFrame={48} width={700} tiltX={2} tiltY={2} float={!confirmed}>
               <div

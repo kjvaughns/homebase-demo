@@ -1,11 +1,11 @@
 import React from 'react';
 import { AbsoluteFill, spring, useCurrentFrame, useVideoConfig, interpolate } from 'remotion';
-import { C, FONT, SPRING_HEAVY, SPRING_GENTLE } from '../constants';
+import { C, FONT, GRADIENT_TEXT, SPRING_HEAVY, SPRING_GENTLE } from '../constants';
 import { IPhoneFrame } from '../components/iPhoneFrame';
 import { Logo } from '../components/Logo';
 import { FeatherIcon } from '../components/FeatherIcon';
 
-// Sequence-relative: 0-170 (~2.8s)
+// Sequence-relative: 0-160 (~2.7s)
 
 const MINI_STATS = [
   { label: 'Clients', value: '24', icon: 'users' },
@@ -101,13 +101,13 @@ export const EndCard: React.FC = () => {
     extrapolateLeft: 'clamp',
   });
 
-  const finalFade = interpolate(frame, [152, 170], [1, 0], {
+  const finalFade = interpolate(frame, [142, 160], [1, 0], {
     extrapolateRight: 'clamp',
     extrapolateLeft: 'clamp',
   });
 
   return (
-    <AbsoluteFill style={{ background: C.bg, opacity: finalFade }}>
+    <AbsoluteFill style={{ opacity: finalFade }}>
       {/* Subtle green bloom */}
       <AbsoluteFill
         style={{
@@ -128,7 +128,7 @@ export const EndCard: React.FC = () => {
         <div
           style={{
             opacity: phoneOpacity,
-            transform: `translateY(${phoneY}px) scale(0.82) rotate(-4deg)`,
+            transform: `translateY(${phoneY}px) scale(1.02) rotate(-4deg)`,
             perspective: 1200,
           }}
         >
@@ -142,35 +142,35 @@ export const EndCard: React.FC = () => {
           <div
             style={{
               opacity: runOpacity,
-              fontSize: 52,
+              fontSize: 64,
               fontWeight: 300,
               color: C.white,
               fontFamily: FONT,
               letterSpacing: '-0.01em',
             }}
           >
-            Run your business.
+            Let's get you your
           </div>
           <div
             style={{
               opacity: getOpacity,
               transform: `scale(${getScale})`,
               transformOrigin: 'left center',
-              fontSize: 60,
+              fontSize: 88,
               fontWeight: 900,
-              color: C.green,
               fontFamily: FONT,
               letterSpacing: '-0.02em',
+              ...GRADIENT_TEXT,
             }}
           >
             Get clients.
           </div>
 
           <div style={{ opacity: metaOpacity, display: 'flex', alignItems: 'center', gap: 12, marginTop: 22 }}>
-            <Logo size={34} />
+            <Logo size={44} />
             <span
               style={{
-                fontSize: 15,
+                fontSize: 20,
                 fontWeight: 600,
                 color: C.white,
                 letterSpacing: '0.16em',
@@ -182,8 +182,8 @@ export const EndCard: React.FC = () => {
             </span>
           </div>
 
-          <div style={{ opacity: metaOpacity, fontSize: 13, color: C.muted, fontFamily: FONT }}>
-            Available on iOS · <span style={{ color: C.green }}>homebaseproapp.com</span>
+          <div style={{ opacity: metaOpacity, fontSize: 19, color: C.muted, fontFamily: FONT }}>
+            $29.99/mo · Free until your first paid booking · <span style={{ color: C.green }}>homebaseproapp.com</span>
           </div>
 
           {/* App Store badge */}
@@ -200,12 +200,12 @@ export const EndCard: React.FC = () => {
               marginTop: 6,
             }}
           >
-            <svg width="20" height="23" viewBox="0 0 18 20" fill={C.white}>
+            <svg width="26" height="30" viewBox="0 0 18 20" fill={C.white}>
               <path d="M14.7 10.6c0-2.4 2-3.6 2.1-3.7-1.1-1.7-2.9-1.9-3.5-1.9-1.5-.2-2.9.9-3.7.9-.8 0-1.9-.9-3.2-.9C4.8 5 3.3 6 2.5 7.5c-1.7 3-.4 7.4 1.2 9.8.8 1.2 1.7 2.5 3 2.4 1.2 0 1.7-.8 3.1-.8 1.5 0 1.9.8 3.2.8 1.3 0 2.1-1.2 2.9-2.4.9-1.4 1.3-2.7 1.3-2.8-.1 0-2.5-1-2.5-3.9zM12.4 3.2c.7-.8 1.1-1.9 1-3.1-1 0-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3 1.1.1 2.2-.6 2.9-1.4z" />
             </svg>
             <div>
-              <div style={{ fontSize: 9, color: C.muted, fontFamily: FONT }}>Download on the</div>
-              <div style={{ fontSize: 14, fontWeight: 600, color: C.white, fontFamily: FONT }}>App Store</div>
+              <div style={{ fontSize: 12, color: C.muted, fontFamily: FONT }}>Download on the</div>
+              <div style={{ fontSize: 18, fontWeight: 600, color: C.white, fontFamily: FONT }}>App Store</div>
             </div>
           </div>
         </div>
